@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mechanical Mondays | Week 1 — Building Your Financial Foundation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+.flip-card-inner { position:relative; width:100%; height:100%; transition:transform 0.5s ease; transform-style:preserve-3d; }
+.flipped .flip-card-inner { transform:rotateY(180deg); }
+.flip-front, .flip-back { position:absolute; inset:0; border-radius:14px; border:1px solid; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+.flip-back { transform:rotateY(180deg); }
+    :root {
+      --orange: #f97316;
+      --orange-dim: #c2500f;
+      --bg: #09090b;
+      --card: #111113;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --muted: #71717a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    h1, h2, h3, .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+
+    /* Slide animations */
+    @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .slide-in { animation: slideIn 0.35s ease-out forwards; }
+
+    /* Progress bar */
+    #progress-bar { transition: width 0.4s ease; }
+
+    /* TOC */
+    .toc-btn { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; border-radius: 12px; text-align: left; border: 1px solid transparent; transition: all 0.2s; cursor: pointer; background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .toc-btn:hover:not(:disabled) { background: #1c1c1f; color: var(--text); border-color: var(--border); }
+    .toc-btn.active { background: var(--orange); color: #000; border-color: var(--orange); }
+    .toc-btn.done { background: #14532d33; color: #4ade80; border-color: #166534; }
+    .toc-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .toc-num { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; background: #27272a; }
+    .toc-btn.active .toc-num { background: #00000033; color: #000; }
+    .toc-btn.done .toc-num { background: #166534; color: #4ade80; }
+
+    /* Cards */
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; text-align: center; }
+    .bucket-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px 20px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+    .bucket-card:hover { transform: translateY(-4px); }
+
+    /* Notes accordion */
+    .notes-toggle { width: 100%; padding: 14px 20px; border-radius: 12px; background: #1c1c1f; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; text-align: left; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+    .notes-toggle:hover { background: #27272a; color: var(--text); }
+    .notes-toggle.open { background: #1a1200; border-color: var(--orange-dim); color: var(--orange); }
+    .notes-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .notes-panel.open { max-height: 2000px; }
+    .notes-inner { background: #0f0d00; border: 1px solid #3d2f00; border-top: none; border-radius: 0 0 12px 12px; padding: 20px 24px; color: #d4c5a0; font-size: 15px; line-height: 1.7; }
+
+    /* Quiz */
+    .quiz-option { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); cursor: pointer; transition: all 0.2s; margin-bottom: 10px; text-align: left; width: 100%; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); }
+    .quiz-option:hover { border-color: var(--orange); background: #1a0f00; }
+    .quiz-option.selected { border-color: var(--orange); background: #1a0f00; }
+    .quiz-option.correct { border-color: #4ade80; background: #0a1f0a; color: #4ade80; }
+    .quiz-option.wrong { border-color: #f87171; background: #1f0a0a; color: #f87171; }
+    .quiz-option:disabled { cursor: not-allowed; }
+    .option-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px; transition: all 0.2s; }
+    .quiz-option.selected .option-dot { border-color: var(--orange); background: var(--orange); }
+    .quiz-option.correct .option-dot { border-color: #4ade80; background: #4ade80; }
+    .quiz-option.wrong .option-dot { border-color: #f87171; background: #f87171; }
+
+    /* Leaderboard modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 50; backdrop-filter: blur(4px); }
+    .modal { background: #111113; border: 1px solid var(--border); border-radius: 24px; padding: 40px; max-width: 500px; width: 90%; }
+
+    /* Pill tag */
+    .pill { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .pill-orange { background: #431407; color: var(--orange); }
+    .pill-green { background: #14532d33; color: #4ade80; }
+
+    /* Nav buttons */
+    .btn-primary { padding: 14px 32px; background: var(--orange); color: #000; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { background: #fb923c; transform: translateY(-1px); }
+    .btn-secondary { padding: 14px 28px; background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover:not(:disabled) { background: #1c1c1f; color: var(--text); }
+    .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* Input */
+    input[type="text"] { background: #1c1c1f; border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color 0.2s; }
+    input[type="text"]:focus { border-color: var(--orange); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+    /* Mobile TOC */
+    #mobile-toc { display: none; }
+    @media (max-width: 1024px) {
+      #mobile-toc { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+      #mobile-toc::-webkit-scrollbar { display: none; }
+      #desktop-toc { display: none; }
+    }
+
+    .why-matters-box {
+      background: linear-gradient(135deg, #1a0f00, #0f0900);
+      border: 1px solid #3d2f00;
+      border-left: 4px solid var(--orange);
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+
+    .key-takeaway-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .key-takeaway-item:last-child { border-bottom: none; }
+    .takeaway-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); flex-shrink: 0; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<!-- Leaderboard Modal -->
+<div id="lb-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:6px;">🏆 Leaderboard</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">Top scores for Week 1</p>
+    <div id="lb-list" style="margin-bottom:24px;"></div>
+    <button class="btn-secondary" onclick="document.getElementById('lb-modal').style.display='none'" style="width:100%;">Close</button>
+  </div>
+</div>
+
+<!-- Opt-in Modal -->
+<div id="optin-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal">
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;margin-bottom:6px;">Share Your Score?</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">Choose a nickname to appear on the leaderboard. Others will see your score and nickname.</p>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:8px;">Your Nickname</label>
+      <input type="text" id="nickname-input" placeholder="e.g. FinanceFox42" style="width:100%;" maxlength="20" />
+      <p id="nickname-msg" style="font-size:12px;color:var(--muted);margin-top:6px;min-height:18px;"></p>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn-primary" onclick="submitScore()" style="flex:1;">Post My Score</button>
+      <button class="btn-secondary" onclick="document.getElementById('optin-modal').style.display='none'" style="flex:1;">No Thanks</button>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 py-6 md:px-8 md:py-10">
+
+  <!-- Header -->
+  <header style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div style="background:var(--orange);padding:12px;border-radius:12px;display:flex;">
+        <svg width="24" height="24" fill="none" stroke="#000" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:0.04em;color:#fff;line-height:1;">MECHANICAL <span style="color:var(--orange);">MONDAYS</span></h1>
+        <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);font-weight:700;margin-top:2px;">Week 1</p>
+      </div>
+    </div>
+    <button class="btn-secondary" onclick="openLeaderboard()" style="display:flex;align-items:center;gap:8px;font-size:13px;padding:10px 18px;">
+      🏆 <span>Scores</span>
+    </button>
+  </header>
+
+  <!-- Progress bar -->
+  <div style="height:4px;background:var(--border);border-radius:999px;margin-bottom:28px;overflow:hidden;">
+    <div id="progress-bar" style="height:100%;background:var(--orange);border-radius:999px;width:0%;"></div>
+  </div>
+
+  <!-- Mobile TOC -->
+  <div id="mobile-toc"></div>
+
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:28px;align-items:start;" class="lg-grid">
+    <style>.lg-grid { display:grid; } @media(max-width:1024px){.lg-grid{display:block;}}</style>
+
+    <!-- Desktop TOC -->
+    <aside id="desktop-toc" style="position:sticky;top:24px;space-y:8px;"></aside>
+
+    <!-- Main Content -->
+    <main style="background:var(--card);border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.6);">
+      <div id="content" style="padding:clamp(24px,5vw,48px);"></div>
+      <div id="footer-nav" style="padding:20px 32px;background:#0a0a0b;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;"></div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ── Storage helpers (localStorage for scores) ────────────────────────────────
+const STORAGE_KEY = 'mm_week1_scores';
+
+function getScores() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+function saveScore(nickname, score, attempts) {
+  const scores = getScores();
+  const existing = scores.findIndex(s => s.nickname.toLowerCase() === nickname.toLowerCase());
+  if (existing >= 0) {
+    scores[existing].score = Math.max(scores[existing].score, score);
+    scores[existing].attempts = (scores[existing].attempts || 1) + 1;
+  } else {
+    scores.push({ nickname, score, attempts: attempts || 1, date: new Date().toLocaleDateString() });
+  }
+  scores.sort((a,b) => b.score - a.score);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+}
+
+// ── Quiz Data ────────────────────────────────────────────────────────────────
+const quizQuestions = [
+  {
+    q: "What percentage of Americans have a written financial plan?",
+    options: ["25%", "50%", "75%", "10%"],
+    correct: 0,
+    explanation: "Only about 25% of Americans have a written financial plan — which means most people are reacting to financial events rather than preparing for them."
+  },
+  {
+    q: "The three pillars of an integrated financial plan are:",
+    options: ["Stocks, Bonds, Real Estate", "Wealth, Tax, and Legal", "Income, Growth, and Cash", "Saving, Spending, and Investing"],
+    correct: 1,
+    explanation: "Wealth, Tax, and Legal must work together. A gap in any one pillar can undermine the others."
+  },
+  {
+    q: "In the Infinity Buckets model, what percentage is recommended for Cash?",
+    options: ["30%", "20%", "10%", "5%"],
+    correct: 2,
+    explanation: "Cash sits at 10% — enough for liquidity and opportunity, without dragging down overall returns."
+  },
+  {
+    q: "Which of the following best describes 'planning vs products'?",
+    options: [
+      "Products should always come before planning",
+      "Building a plan first ensures products align with your goals",
+      "A plan is only needed after retirement",
+      "Products and planning are unrelated"
+    ],
+    correct: 1,
+    explanation: "Most people accumulate products reactively. A plan built first ensures every product serves a specific purpose in your financial picture."
+  },
+  {
+    q: "True or False: 80% of Americans say their retirement plan is to continue working.",
+    options: ["True", "False"],
+    correct: 0,
+    explanation: "Unfortunately, true — and that's exactly why starting a structured plan early matters so much."
+  },
+  {
+    q: "The Infinity Buckets divide your money into four categories. Which is NOT one of them?",
+    options: ["Income", "Real Estate", "Crypto", "Growth"],
+    correct: 2,
+    explanation: "The four buckets are Income, Real Estate, Growth, and Cash. Crypto isn't a bucket — it might fit inside Growth depending on your risk tolerance."
+  },
+  {
+    q: "Jim & Mary Kay want to retire at age 67. They are currently 50. How many years do they have to build their plan?",
+    options: ["10 years", "15 years", "17 years", "20 years"],
+    correct: 2,
+    explanation: "17 years is a solid runway — enough time to meaningfully shift their buckets and take advantage of compounding."
+  },
+  {
+    q: "Jim & Mary Kay's Social Security covers $4,000/month at retirement. Their monthly expenses are $10,300. What is their monthly income gap?",
+    options: ["$4,300", "$6,300", "$8,000", "$10,300"],
+    correct: 1,
+    explanation: "$10,300 in expenses minus $4,000 in Social Security leaves a $6,300 monthly gap — $75,600 per year that their investment buckets need to generate."
+  },
+  {
+    q: "Two retirees start with the same balance, same average return, and same withdrawals. One runs out of money early — the other doesn't. What explains the difference?",
+    options: [
+      "One invested in riskier assets",
+      "One had higher expenses",
+      "The timing of when losses occurred",
+      "One started Social Security earlier"
+    ],
+    correct: 2,
+    explanation: "This is Sequence of Return Risk. When big losses hit early in retirement while you're making withdrawals, the portfolio may never recover — even if the long-term average return is identical."
+  },
+  {
+    q: "Which risk tolerance profile best describes someone who would sell everything and move to cash during a market drop?",
+    options: ["Growth Mindset", "Balanced Mindset", "Cash Flow Mindset", "None of the above"],
+    correct: 2,
+    explanation: "A Cash Flow Mindset investor prioritizes protecting what they have over chasing returns. Stability matters more than upside — and that's a completely valid strategy, especially near retirement."
+  }
+  
+];
+
+// ── Slide Data ────────────────────────────────────────────────────────────────
+const slides = [
+  {
+    id: 'welcome',
+    title: 'Welcome',
+    whyMatters: null,
+    html: `
+      <div style="text-align:center;padding:60px 20px 40px;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:0.08;background:radial-gradient(circle at 60% 40%, #f97316 0%, transparent 70%);pointer-events:none;"></div>
+        <div style="position:relative;z-index:1;">
+          <span class="pill pill-orange" style="margin-bottom:20px;display:inline-block;">Week 1</span>
+          <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5.5rem);color:#fff;line-height:0.95;margin-bottom:16px;">
+            BUILDING YOUR<br><span style="color:var(--orange);">FINANCIAL FOUNDATION</span>
+          </h1>
+          <p style="font-size:clamp(1rem,2vw,1.3rem);color:#a1a1aa;max-width:480px;margin:0 auto 40px;line-height:1.6;">
+            Financial wisdom — distilled into a practical, real-world system you can actually use.
+          </p>
+          <div style="display:inline-flex;align-items:center;gap:8px;background:#1c1c1f;border:1px solid var(--border);border-radius:12px;padding:12px 20px;">
+            <span style="color:var(--orange);font-size:20px;">⚙️</span>
+            <span style="font-size:14px;color:#a1a1aa;">Mechanical Mondays</span>
+          </div>
+          <p style="font-size:12px;color:#71717a;margin-top:40px;">© TheInvestorToolkit.com</p>
+        </div>
+      </div>
+    `,
+    notes: null
+  },
+  {
+    id: 'why-matters',
+    title: "Why This Matters",
+    whyMatters: null,
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Why This Matters</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:24px;">The Financial Wake-Up Call</h2>
+      <div class="why-matters-box" style="margin-bottom:28px;">
+        <p style="font-size:1.15rem;line-height:1.75;color:#d4c5a0;">
+          Most people spend more time planning a vacation than planning their financial future. 
+          The result? A retirement plan that looks like "keep working." <strong style="color:var(--orange);">Our Goal is to change that.</strong>
+        </p>
+      </div>
+      <p style="color:#a1a1aa;font-size:15px;line-height:1.7;">
+        Today we're discussing the <strong style="color:#fff;">Infinity Buckets Model</strong> — a simple, powerful framework 
+        that brings order to your money, no matter where you're starting from. Whether you're just beginning 
+        or trying to get organized after years of collecting financial products, this is your foundation.
+      </p>
+    `,
+    notes: "It's easy to get caught up looking for the next great investment. But without a plan behind it, even great investments can work against you. \n\nThe most powerful shift you can make right now is moving from 'what should I buy?' to 'what does my plan need?'"
+  },
+  {
+    id: 'agenda',
+    title: "Today's Topics",
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Agenda</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:32px;">Today's Discussion</h2>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        ${[
+          ['🗂️', 'Building Your Plan & Buckets', 'The framework that organizes everything'],
+          ['♾️', 'The Infinity Buckets', 'How to allocate across 4 strategic categories'],
+          ['⚖️', 'Risk Tolerances', 'Understanding how much volatility you can stomach'],
+        ].map(([icon, title, desc]) => `
+          <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:#0f0f11;border:1px solid var(--border);border-radius:16px;">
+            <span style="font-size:24px;flex-shrink:0;">${icon}</span>
+            <div>
+              <div style="font-weight:700;font-size:16px;color:#fff;">${title}</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px;">${desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `,
+    notes: "While many times there's a focus on the hot, financial product, building a solid financial plan comes first to ensure choices align with your goals.\n\nBuilding a financial plan involves the three building blocks we are going to discuss today.\n\nFirst, the buckets — a framework for organizing your money across four strategic categories.\n\n Second, how those buckets work together as part of an integrated plan across wealth, tax, and legal. \n\n Lastly, risk tolerance — understanding how you actually behave when markets get uncomfortable, and making sure your investments match that reality."
+  },
+  {
+    id: 'planning',
+    title: 'Planning vs Products',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">The Problem</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:28px;">Planning Versus Products</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;">
+        ${[
+          ['25%', 'have a written financial plan'],
+          ['30%', 'have a long-term financial plan'],
+          ['70%', 'say their plan needs work'],
+          ['80%', 'retirement plan: keep working'],
+        ].map(([stat, label]) => `
+          <div class="stat-card">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--orange);line-height:1;">${stat}</div>
+            <p style="color:#a1a1aa;font-size:14px;margin-top:10px;line-height:1.5;">${label}</p>
+          </div>
+        `).join('')}
+      </div>
+      <p style="text-align:center;font-size:13px;color:#71717a;">
+        Source: <a href="https://spendmenot.com/blog/personal-finance-statistics/" style="color:var(--orange);text-decoration:none;" target="_blank">spendmenot.com</a>
+      </p>
+    `,
+    notes: "Most people collect financial products over time — a 401k here, a life insurance policy there, maybe some stocks — without those pieces ever connecting into a real strategy. The result is a portfolio that grew by accident, not by design. A plan changes that. When you build the plan first, every product has a purpose.\n\n One thing to note in the survey is working in retirement.  Working in retirement isn’t a horrible thing, as long as it is a choice we have versus a requirement.  \n\nIt may also be beneficial for your mental acuity.  Studies show that working at older ages, as many plan to do, supports cognitive health. For example, a U.S. Health and Retirement Study (https://hrsonline.isr.umich.edu/) found that older adults working past their 60s had better memory scores than retirees, supporting the “use it or lose it” hypothesis. Another study (The Lancet, 2013, https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)62297-0) of self-employed French workers showed those retiring later had a lower dementia risk, highlighting how mental stimulation from work preserves cognitive function.\n\n The goal of this project is to make working in retirement a choice not a requirement."
+  },
+  {
+    id: 'integrated',
+    title: 'Integrated Plan',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">The Solution</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:32px;">Having an Integrated Plan</h2>
+<div style="display:flex;flex-direction:column;align-items:center;gap:24px;padding:20px 0;">
+  <!-- Gear display -->
+<div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+<svg id="gear-svg" width="340" height="300" viewBox="0 0 340 300"></svg>
+<p style="text-align:center;font-size:13px;color:var(--muted);margin-top:8px;">⚙️ Click any gear to explore that pillar</p>
+  <!-- Info panel -->
+  <div id="gear-panel" style="display:none;width:100%;max-width:520px;border-radius:16px;padding:24px 28px;transition:all 0.3s;"></div>
+</div>
+      <div class="why-matters-box" style="margin-top:16px;">
+        <p style="color:#d4c5a0;font-size:15px;line-height:1.7;">
+          True financial success requires all three pillars working <strong style="color:var(--orange);">together</strong>. 
+          A gap in any one area — even if the other two are strong — can derail your entire plan.
+        </p>
+      </div>
+    `,
+    notes: "Wealth, tax, and legal aren't three separate conversations — they're one. A great investment portfolio can lose a significant chunk of its value to avoidable taxes. A solid estate plan means nothing if there's no wealth left to protect. When all three work together, your plan becomes far more durable than any single piece could be on its own.\n\nAn integrated financial plan unifies goals, income, and investments into a cohesive strategy, similar to assembling a puzzle.\n\n This approach ensures these elements work together for long-term success.\n\n This approach helps to take care of wealth strategies and creation, while also providing access to qualified tax and legal professionals.  "
+  },
+  {
+    id: 'buckets',
+    title: 'Infinity Buckets',
+html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">The Framework</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:28px;">The Infinity Buckets</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:16px;">
+        <div class="bucket-card" id="bucket-card-cash" onclick="bucketClick('cash')" style="border-color:#facc1533;background:#1f1900;cursor:pointer;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#facc15;margin-bottom:12px;">Cash</div>
+          <div style="font-size:3rem;font-weight:900;color:#fff;">10%</div>
+          <div style="width:60%;height:4px;background:#facc15;margin:16px auto 8px;border-radius:2px;opacity:0.6;"></div>
+          <div style="font-size:11px;color:#facc15;opacity:0.7;text-transform:uppercase;letter-spacing:0.06em;">Click to explore</div>
+        </div>
+
+        <div class="bucket-card" id="bucket-card-income" onclick="bucketClick('income')" style="border-color:#22d3ee33;background:#001f24;cursor:pointer;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#22d3ee;margin-bottom:12px;">Income</div>
+          <div style="font-size:3rem;font-weight:900;color:#fff;">30%</div>
+          <div style="width:60%;height:4px;background:#22d3ee;margin:16px auto 8px;border-radius:2px;opacity:0.6;"></div>
+          <div style="font-size:11px;color:#22d3ee;opacity:0.7;text-transform:uppercase;letter-spacing:0.06em;">Click to explore</div>
+        </div>
+
+        <div class="bucket-card" id="bucket-card-realestate" onclick="bucketClick('realestate')" style="border-color:#f9731633;background:#1a0f00;cursor:pointer;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#f97316;margin-bottom:12px;">Real Estate</div>
+          <div style="font-size:3rem;font-weight:900;color:#fff;">30%</div>
+          <div style="width:60%;height:4px;background:#f97316;margin:16px auto 8px;border-radius:2px;opacity:0.6;"></div>
+          <div style="font-size:11px;color:#f97316;opacity:0.7;text-transform:uppercase;letter-spacing:0.06em;">Click to explore</div>
+        </div>
+
+        <div class="bucket-card" id="bucket-card-growth" onclick="bucketClick('growth')" style="border-color:#f8717133;background:#1f0a0a;cursor:pointer;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#f87171;margin-bottom:12px;">Growth</div>
+          <div style="font-size:3rem;font-weight:900;color:#fff;">30%</div>
+          <div style="width:60%;height:4px;background:#f87171;margin:16px auto 8px;border-radius:2px;opacity:0.6;"></div>
+          <div style="font-size:11px;color:#f87171;opacity:0.7;text-transform:uppercase;letter-spacing:0.06em;">Click to explore</div>
+        </div>
+
+
+      </div>
+
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;text-align:center;">💡 Click any bucket to see what might go inside it.</p>
+
+      <div id="bucket-panel" style="display:none;border-radius:16px;padding:24px 28px;transition:all 0.3s;margin-bottom:16px;"></div>
+
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;text-align:center;">Percentages are starting guidelines — your personal plan may vary based on goals and risk tolerance.</p>
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;text-align:center;">Products in product cards are samples and there are many other products which may fit into the various buckets — your personal risk tolerance and plan will dictate which products fit into which buckets.</p>
+    `,
+    notes: "The Buckets framework organizes money into 4 categories cash/cash alternatives, income, real estate, and growth in order to support financial goals. \n\nThe idea is to start with your cash and cash alternatives bucket and build up to 3-12 months worth of savings in a high yield savings or similar strategy.  \n\n Then move onto the income bucket, typically starting with dividend paying stocks.\n\n   Later you may layer in covered option income on those stocks. \n\n Next you will work towards your real estate bucket, which may involve a variety of different strategies depending on your financial expertise, level of involvement desired, and investment capital available.\n\n   Lastly, you will move onto your growth bucket.  This bucket is intended to include some managed money by a financial professional or modeled after a financial professional portfolio.  Some ideas for this could include index funds, professionally managed money, or modeling a successful investor’s portfolio.\n\n The baselines for these buckets are 10% cash, 30% income, 30% real estate, and 30% growth.  These are just guidelines and will vary from investor to investor based on many dynamics.  These percentages are based on your net worth, not including your personal residence or furnishings.\n\n Balanced allocation across buckets minimizes risk and creates sustainable income. The 10/30/30/30 split is a starting point — not a one-size-fits-all rule.\n\n What matters most right now is understanding which buckets you already have money in — and which ones are completely empty. Some people are surprised to find they have everything in Growth and nothing in Income. That imbalance is exactly what this course is designed to help you fix "
+  },
+  {
+    id: 'where-do-you-stand',
+    title: 'Bucket Blueprint',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Self Assessment</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:8px;">Your Bucket Blueprint</h2>
+      <p style="color:#a1a1aa;font-size:15px;margin-bottom:6px;line-height:1.6;">Enter your current balances in each bucket to see how your allocation compares to the 10/30/30/30 target.</p>
+      <p style="color:#a1a1aa;font-size:13px;margin-bottom:24px;">Using Jim & Mary Kay's numbers as an example — clear any field to enter your own.</p>
+
+      <!-- Bucket Inputs -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px;">
+        ${[
+          ['cash', 'Cash', '#facc15', '#1f1900', '225000'],
+          ['income', 'Income', '#22d3ee', '#001f24', '0'],
+          ['realestate', 'Real Estate', '#f97316', '#1a0f00', '200000'],
+          ['growth', 'Growth', '#f87171', '#1f0a0a', '500000'],
+          ].map(([id, label, color, bg, val]) => `
+          <div style="background:${bg};border:1px solid ${color}33;border-radius:16px;padding:20px;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:${color};margin-bottom:12px;">${label}</div>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#71717a;font-weight:700;">$</span>
+              <input type="text" id="bucket-${id}" value="${val}" oninput="wdsUpdate()" style="width:100%;background:#00000033;border:1px solid ${color}55;border-radius:8px;padding:10px 10px 10px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;outline:none;" />
+            </div>
+            <div style="font-size:11px;color:#a1a1aa;margin-top:8px;">Target: ${id === 'cash' ? '10' : '30'}%</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Results Panel -->
+      <div id="wds-results" style="background:#0a0a0c;border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#fff;">Your Allocation</span>
+          <span id="wds-total" style="font-size:13px;color:var(--muted);"></span>
+        </div>
+
+        <!-- Bars -->
+        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;">
+          ${[
+            ['cash', 'Cash', '#facc15', 10],
+            ['income', 'Income', '#22d3ee', 30],
+            ['realestate', 'Real Estate', '#f97316', 30],
+            ['growth', 'Growth', '#f87171', 30],
+          ].map(([id, label, color, target]) => `
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:13px;font-weight:700;color:${color};">${label}</span>
+                <span id="wds-pct-${id}" style="font-size:13px;font-weight:700;color:#fff;"></span>
+              </div>
+              <div style="position:relative;height:12px;background:#1c1c1f;border-radius:999px;overflow:visible;">
+                <div id="wds-bar-${id}" style="height:100%;border-radius:999px;background:${color};width:0%;transition:width 0.4s ease;"></div>
+                <div style="position:absolute;top:-4px;height:20px;width:2px;background:#fff;border-radius:1px;left:${target}%;opacity:0.5;"></div>
+                <div style="position:absolute;top:-18px;font-size:9px;color:#a1a1aa;font-weight:700;left:${target}%;transform:translateX(-50%);">TARGET</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Verdict -->
+        <div id="wds-verdict" style="border-radius:12px;padding:16px 20px;"></div>
+      </div>
+
+      <!-- Risk profile nudge -->
+      <div style="background:#0f0f11;border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.4rem;">⚖️</span>
+<p style="font-size:14px;color:#a1a1aa;line-height:1.6;">Your <strong style="color:#fff;">risk tolerance</strong> will also shape how you fill these buckets — we'll explore that shortly.</p>
+      </div>
+    `,
+    notes: "This is where it gets personal. If you used Jim & Mary Kay's numbers, you can see they have nothing in the Income bucket — everything is sitting in Cash, Growth, and Real Estate ( not generating income). That's not unusual, but it's a problem. \n\nA lopsided allocation combined with a bad sequence of returns is one of the most common reasons people run out of money in retirement. \n\nYour blueprint is the first step toward fixing that."
+  },
+  
+  
+  {
+    id: 'persona',
+    title: 'Jim & Mary Kay',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Case Study</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:28px;">Meet Jim & Mary Kay Sample</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px;">
+        ${[
+          ['🎂', 'Current Age', '50 years old'],
+          ['🎯', 'Retirement Goal', 'Age 67'],
+          ['💰', 'Combined Income', '$192,000 / year'],
+          ['📬', 'Social Security', '$4,000 / mo @ 67'],
+        ].map(([icon, label, val]) => `
+          <div class="stat-card" style="text-align:left;padding:24px;">
+            <div style="font-size:1.8rem;margin-bottom:12px;">${icon}</div>
+            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:700;margin-bottom:6px;">${label}</div>
+            <div style="font-size:1.3rem;font-weight:800;color:#fff;">${val}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="why-matters-box">
+        <p style="color:#d4c5a0;font-size:15px;line-height:1.7;">
+          Jim & Mary Kay have a <strong style="color:var(--orange);">17-year runway</strong> before retirement — 
+          prime time to optimize their buckets, minimize sequence risk, and build sustainable income streams.
+        </p>
+      </div>
+    `,
+    notes: "Jim & Mary Kay are a composite example built from real planning scenarios — not a real couple, but very real numbers. \n\nAs you go through this course, try mapping your own situation alongside theirs. How does your income compare? Your timeline? Your current bucket allocation? \n\nThe more you personalize the example, the more useful it becomes."
+  },
+{
+    id: 'current-path',
+    title: 'The Current Path',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Case Study</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:8px;">The Current Path</h2>
+      <p style="color:#a1a1aa;font-size:15px;margin-bottom:28px;line-height:1.6;">If Jim &amp; Mary Kay change <em>nothing</em>, here is what their retirement looks like year by year. Watch what happens to their nest egg.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px;">
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-size:1.4rem;margin-bottom:6px;">💸</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:700;margin-bottom:4px;">Monthly Expenses</div>
+          <div style="font-size:1.1rem;font-weight:800;color:#fff;">$10,300</div>
+        </div>
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-size:1.4rem;margin-bottom:6px;">📬</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:700;margin-bottom:4px;">Social Security</div>
+          <div style="font-size:1.1rem;font-weight:800;color:#fff;">$4,000/mo</div>
+        </div>
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-size:1.4rem;margin-bottom:6px;">⚠️</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:700;margin-bottom:4px;">Monthly Shortfall</div>
+          <div style="font-size:1.1rem;font-weight:800;color:#fff;">$6,300</div>
+        </div>
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-size:1.4rem;margin-bottom:6px;">💀</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:700;margin-bottom:4px;">Money Runs Out</div>
+          <div style="font-size:1.1rem;font-weight:800;color:#fff;">Age 81</div>
+        </div>
+      </div>
+      <div style="background:#0a0a0c;border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.06em;">Retirement Fund Balance</span>
+          <span id="cp-year-label" style="color:var(--orange);font-weight:700;font-size:12px;"></span>
+        </div>
+        <div id="cp-chart" style="display:flex;align-items:flex-end;gap:4px;height:160px;margin-bottom:12px;"></div>
+        <div id="cp-labels" style="display:flex;gap:4px;"></div>
+        <div style="margin-top:20px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+          <button onclick="cpAnimate()" style="padding:10px 24px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
+            Replay Animation
+          </button>
+          <button onclick="cpToggleTable()" id="cp-table-btn" style="padding:10px 24px;background:transparent;border:1px solid #f97316;border-radius:10px;color:#f97316;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
+            🔍 Show Me The Numbers
+          </button>
+        </div>
+      </div>
+      <div id="cp-table" style="display:none;margin-top:24px;">
+  <p id="cp-footnote" style="display:none;font-size:12px;color:#a1a1aa;margin-bottom:12px;">* Assumes 6% annual return on $925,000 starting balance at age 67, $75,600/year withdrawal ($6,300/month gap × 12). No inflation adjustment. For illustrative purposes only.</p>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr>
+          <th style="padding:10px 12px;text-align:left;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Age</th>
+          <th style="padding:10px 12px;text-align:right;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Start Balance</th>
+          <th style="padding:10px 12px;text-align:right;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">6% Return</th>
+          <th style="padding:10px 12px;text-align:right;color:#f87171;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Withdrawal</th>
+          <th style="padding:10px 12px;text-align:right;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">End Balance</th>
+        </tr>
+      </thead>
+      <tbody id="cp-table-body"></tbody>
+    </table>
+  </div>
+</div>
+      <div style="background:linear-gradient(135deg,#1f0a0a,#120606);border:1px solid #7f1d1d;border-left:4px solid #ef4444;border-radius:14px;padding:20px 24px;">
+        <p style="color:#fca5a5;font-size:15px;line-height:1.7;">
+          <strong style="color:#f87171;">Without a plan, the math is brutal.</strong> Social Security covers less than half their monthly needs — and their savings are gone by age 81. This is why building an intentional income strategy matters.
+        </p>
+      </div>
+    `,
+    notes: "The most important thing to take away from this slide: Social Security alone won't cut it. Jim and Mary Kay bring in $4,000/month from SS at retirement — but their expenses are $10,300/month. That $6,300 gap has to come from somewhere. \n\nWithout a strategy, they're drawing down savings every single month, and the math runs out at age 81. \n\nThis is why the diversified buckets aren't optional — they're the foundation of a plan that doesn't run dry."
+  },
+  {
+    id: 'income-gap',
+    title: 'Income Gap',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Calculator</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:8px;">The Income Gap</h2>
+      <p style="color:#a1a1aa;font-size:15px;margin-bottom:6px;line-height:1.6;">How much of your monthly retirement income is still unaccounted for? Use Jim & Mary Kay's numbers or enter your own.</p>
+      <p style="color:#a1a1aa;font-size:13px;margin-bottom:24px;">Adjust the inputs below to see your gap in real time.</p>
+
+      <!-- Inputs -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px;">
+
+        <!-- Monthly Expenses -->
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:700;margin-bottom:10px;">Monthly Expenses</div>
+          <div style="position:relative;margin-bottom:12px;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#71717a;font-weight:700;">$</span>
+            <input type="text" id="ig-expenses" value="10,300" oninput="igUpdate()" style="width:100%;background:#1c1c1f;border:1px solid var(--border);border-radius:8px;padding:10px 10px 10px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;outline:none;" />
+          </div>
+          <input type="range" id="ig-expenses-slider" min="1000" max="25000" step="100" value="10300" oninput="igSliderUpdate('expenses')" style="width:100%;accent-color:#f97316;" />
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#a1a1aa;margin-top:4px;"><span>$1,000</span><span>$25,000</span></div>
+        </div>
+
+        <!-- Social Security -->
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:700;margin-bottom:10px;">Social Security</div>
+          <div style="position:relative;margin-bottom:12px;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#71717a;font-weight:700;">$</span>
+            <input type="text" id="ig-ss" value="4,000" oninput="igUpdate()" style="width:100%;background:#1c1c1f;border:1px solid var(--border);border-radius:8px;padding:10px 10px 10px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;outline:none;" />
+          </div>
+          <input type="range" id="ig-ss-slider" min="0" max="10000" step="100" value="4000" oninput="igSliderUpdate('ss')" style="width:100%;accent-color:#22d3ee;" />
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#a1a1aa;margin-top:4px;"><span>$0</span><span>$10,000</span></div>
+        </div>
+
+        <!-- Other Income -->
+        <div style="background:#0f0f11;border:1px solid var(--border);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:700;margin-bottom:10px;">Other Income</div>
+          <div style="position:relative;margin-bottom:12px;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#71717a;font-weight:700;">$</span>
+            <input type="text" id="ig-other" value="0" oninput="igUpdate()" style="width:100%;background:#1c1c1f;border:1px solid var(--border);border-radius:8px;padding:10px 10px 10px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;outline:none;" />
+          </div>
+          <input type="range" id="ig-other-slider" min="0" max="10000" step="100" value="0" oninput="igSliderUpdate('other')" style="width:100%;accent-color:#4ade80;" />
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#a1a1aa;margin-top:4px;"><span>$0</span><span>$10,000</span></div>
+        </div>
+
+      </div>
+
+      <!-- Visual Bar -->
+      <div style="background:#0a0a0c;border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#fff;">Monthly Income vs Expenses</span>
+          <span id="ig-expenses-label" style="font-size:13px;color:var(--muted);"></span>
+        </div>
+
+        <!-- Bar -->
+        <div style="position:relative;height:40px;background:#1c1c1f;border-radius:10px;overflow:hidden;margin-bottom:12px;">
+          <div id="ig-bar-ss" style="position:absolute;left:0;top:0;height:100%;background:#22d3ee;border-radius:10px 0 0 10px;transition:width 0.4s ease;width:0%;"></div>
+          <div id="ig-bar-other" style="position:absolute;top:0;height:100%;background:#4ade80;transition:width 0.4s ease,left 0.4s ease;width:0%;"></div>
+          <div id="ig-bar-gap" style="position:absolute;top:0;height:100%;background:linear-gradient(90deg,#ef4444,#7f1d1d);transition:width 0.4s ease,left 0.4s ease;width:0%;"></div>
+        </div>
+
+        <!-- Legend -->
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:#22d3ee;"></div><span style="font-size:12px;color:var(--muted);">Social Security</span></div>
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:#4ade80;"></div><span style="font-size:12px;color:var(--muted);">Other Income</span></div>
+          <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:3px;background:#ef4444;"></div><span style="font-size:12px;color:var(--muted);">Uncovered Gap</span></div>
+        </div>
+
+        <!-- Numbers -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+          <div style="background:#001f24;border:1px solid #0e7490;border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#22d3ee;font-weight:700;margin-bottom:4px;">Social Security</div>
+            <div id="ig-num-ss" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#22d3ee;"></div>
+          </div>
+          <div style="background:#0a1f0a;border:1px solid #166534;border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#4ade80;font-weight:700;margin-bottom:4px;">Other Income</div>
+            <div id="ig-num-other" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#4ade80;"></div>
+          </div>
+          <div style="background:#1f0a0a;border:1px solid #7f1d1d;border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#f87171;font-weight:700;margin-bottom:4px;">Monthly Gap</div>
+            <div id="ig-num-gap" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#f87171;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verdict -->
+      <div id="ig-verdict" style="background:linear-gradient(135deg,#1a0f00,#0f0900);border:1px solid #3d2f00;border-left:4px solid var(--orange);border-radius:14px;padding:20px 24px;">
+      </div>
+    `,
+    notes: "The income gap is the most personal number in the entire course. This is the moment students stop thinking about Jim and Mary Kay and start thinking about themselves. The gap number — whatever it is — becomes the north star for everything we build in the remaining weeks. How big is the hole? That's what the buckets need to fill.\n\n When breaking down your expenses, keep it simple.  Break them down into 3 categories; liabilities, wants, and needs. \n\nIt is your goal to be honest with yourself about what truly is a want and what is a need."
+  },
+  
+  
+{
+    id: 'sequence-risk',
+    title: 'Sequence Risk',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Concept</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:16px;">Sequence of Return Risk</h2>
+      <div style="background:linear-gradient(135deg,#1a0f00,#0f0900);border:1px solid #3d2f00;border-left:4px solid var(--orange);border-radius:14px;padding:20px 24px;margin-bottom:28px;">
+        <p style="color:#d4c5a0;font-size:15px;line-height:1.75;">
+          <strong style="color:var(--orange);">Sequence of Return Risk (SRR)</strong> is the danger that the <em>timing</em> of investment losses — not just the losses themselves — can permanently damage a retirement portfolio. Two people can have the exact same average return over 20 years, but if one experiences big losses early in retirement while making withdrawals, their portfolio may never recover. The other, who got those same bad years later, survives just fine.
+        </p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+        <div style="background:#0f0f11;border:1px solid #7f1d1d;border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#f87171;margin-bottom:4px;">Portfolio A</div>
+          <div style="font-size:12px;color:var(--muted);">Bad years hit early</div>
+        </div>
+        <div style="background:#0f0f11;border:1px solid #166534;border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#4ade80;margin-bottom:4px;">Portfolio B</div>
+          <div style="font-size:12px;color:var(--muted);">Good years hit early</div>
+        </div>
+      </div>
+      <div style="background:#0a0a0c;border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:0.06em;">Portfolio Balance Over 20 Years</span>
+          <span id="srr-year-label" style="color:var(--orange);font-weight:700;font-size:12px;"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <div style="font-size:11px;color:#f87171;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Portfolio A</div>
+<div id="srr-chart-a" style="display:flex;align-items:flex-end;gap:2px;height:120px;overflow:hidden;"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Portfolio B</div>
+<div id="srr-chart-b" style="display:flex;align-items:flex-end;gap:2px;height:120px;overflow:hidden;"></div>
+          </div>
+        </div>
+<div style="display:flex;justify-content:center;gap:12px;margin-top:16px;flex-wrap:wrap;">
+  <button onclick="srrAnimate()" style="padding:10px 24px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;" onmouseover="this.style.background='#1c1c1f';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--muted)'">
+    ↺ Replay Animation
+  </button>
+  <button onclick="srrToggleTable()" id="srr-table-btn" style="padding:10px 24px;background:transparent;border:1px solid #f97316;border-radius:10px;color:#f97316;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
+    🔍 Show Me The Numbers
+  </button>
+</div>
+<div id="srr-table" style="display:none;margin-top:24px;">
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr>
+          <th style="padding:10px 12px;text-align:left;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">Year</th>
+          <th style="padding:10px 12px;text-align:right;color:#f87171;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">A Return</th>
+          <th style="padding:10px 12px;text-align:right;color:#f87171;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">A Balance</th>
+          <th style="padding:10px 12px;text-align:right;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">B Return</th>
+          <th style="padding:10px 12px;text-align:right;color:#4ade80;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);">B Balance</th>
+        </tr>
+      </thead>
+      <tbody id="srr-table-body"></tbody>
+    </table>
+  </div>
+</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a0f00,#0f0900);border:1px solid #3d2f00;border-left:4px solid var(--orange);border-radius:14px;padding:20px 24px;">
+        <p style="color:#d4c5a0;font-size:14px;line-height:1.75;">
+          <strong style="color:var(--orange);">Same average return. Same withdrawals. Same starting balance.</strong> The only difference is when the bad years showed up — and it made a $500,000 difference in outcome.
+        </p>
+      </div>
+    `,
+    notes: "Sequence of Return Risk is one of the most misunderstood concepts in retirement planning. Most people focus on average returns — but averages don't pay your bills. \n\nThis is why the Cash, Income, and Real Estate buckets are so critical: having a stable income streams that don't require selling growth assets during a downturn is the single best defense against SRR. \n\nWhen you don't have to sell low, bad years early become a lot less dangerous."
+  },
+{
+    id: 'risk-tolerance',
+    title: 'Risk Tolerance',
+    html: `
+      <span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Self-Assessment</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:8px;">What's Your Risk Tolerance?</h2>
+      <p style="color:#a1a1aa;font-size:15px;margin-bottom:28px;line-height:1.6;">7 scenario-based questions. No right or wrong answers — just honest ones. Your result will suggest which bucket strategy fits you best.</p>
+      <div id="rt-container"></div>
+    `,
+    notes: "Your risk tolerance isn't just a number — it's how you actually behave when markets get scary. \n\n The goal of this assessment is to help you understand whether your current investments match how you really feel about risk. \n\n A mismatch between your portfolio and your tolerance is one of the most common — and costly — planning mistakes people make.\n\n That isn't just being too aggressive in your portfolio when your risk doesn't match, but also being under invested."
+  },
+
+
+  {
+    id: 'takeaways',
+    title: 'Key Takeaways',
+    html: `
+      <span class="pill pill-green" style="margin-bottom:16px;display:inline-block;">✓ Wrap-Up</span>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:28px;">Key Takeaways</h2>
+      <div style="margin-bottom:32px;">
+        ${[
+          'Most Americans lack a written financial plan — and the gap shows in retirement outcomes.',
+          'An integrated plan coordinates Wealth, Tax, and Legal together — not in isolation.',
+          'The Infinity Buckets (Cash, Income, Real Estate, Growth) provide a simple organizing framework.',
+          'The 10/30/30/30 split is a starting point — your plan is personalized from there.',
+          'Jim & Mary Kay\'s 17-year runway is a reminder that time is your most powerful asset.',
+        ].map(txt => `
+          <div class="key-takeaway-item">
+            <div class="takeaway-dot"></div>
+            <p style="font-size:15px;line-height:1.6;color:#d4d4d8;">${txt}</p>
+          </div>
+        `).join('')}
+      </div>
+      <div style="margin-bottom:32px;">
+<h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;margin-bottom:16px;color:var(--orange);">Glossary</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">💡 Click any card to flip it and reveal the definition.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+  <div onclick="this.classList.toggle('flipped')" style="height:140px;cursor:pointer;perspective:600px;">
+    <div class="flip-card-inner">
+      <div class="flip-front" style="background:#0f0f11;border-color:#f97316;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#f97316;">Infinity Buckets</div>
+       </div>
+      <div class="flip-back" style="background:#1a0f00;border-color:#f97316;">
+        <p style="color:#d4c5a0;font-size:14px;line-height:1.6;">A framework for allocating money across Cash, Income, Real Estate, and Growth.</p>
+      </div>
+    </div>
+  </div>
+  <div onclick="this.classList.toggle('flipped')" style="height:140px;cursor:pointer;perspective:600px;">
+    <div class="flip-card-inner">
+      <div class="flip-front" style="background:#0f0f11;border-color:#4ade80;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#4ade80;">Integrated Plan</div>
+      </div>
+      <div class="flip-back" style="background:#0a1f0a;border-color:#4ade80;">
+        <p style="color:#d4d4d8;font-size:14px;line-height:1.6;">A financial strategy that coordinates wealth, tax, and legal together — not in isolation.</p>
+      </div>
+    </div>
+  </div>
+  <div onclick="this.classList.toggle('flipped')" style="height:140px;cursor:pointer;perspective:600px;">
+    <div class="flip-card-inner">
+      <div class="flip-front" style="background:#0f0f11;border-color:#f87171;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#f87171;">Sequence Risk</div>
+      </div>
+      <div class="flip-back" style="background:#1f0a0a;border-color:#f87171;">
+        <p style="color:#d4d4d8;font-size:14px;line-height:1.6;">The risk that poor investment returns early in retirement can permanently derail your income.</p>
+      </div>
+    </div>
+  </div>
+  <div onclick="this.classList.toggle('flipped')" style="height:140px;cursor:pointer;perspective:600px;">
+    <div class="flip-card-inner">
+      <div class="flip-front" style="background:#0f0f11;border-color:#60a5fa;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:#60a5fa;">Risk Tolerance</div>
+      </div>
+      <div class="flip-back" style="background:#0a0f1f;border-color:#60a5fa;">
+        <p style="color:#d4d4d8;font-size:14px;line-height:1.6;">Your ability and willingness to endure investment ups and downs without making emotional decisions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="margin-top:32px;">
+  <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;margin-bottom:6px;color:var(--orange);">This Week's Action Steps</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Your assignments from Week 1. Come back to these before next week's session.</p>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    ${[
+      ['🧮','Track Your Income & Expenses','Use the Infinity Calculator or an income/expense tracking tool (spreadsheet) to document your income and expenses.'],
+      ['🪣','Audit Your Buckets','Identify which of the 4 buckets you currently have money in — and which are empty.'],
+      ['⚖️','Confirm Your Risk Profile','Make sure your risk profile feels correct, connect with a fiduciary or online testing to make sure you understand your risk profile.'],
+      ['💬','Talk to Your Household','Have a conversation with your spouse or partner about your retirement timeline.'],
+    ].map(([icon,action,desc]) => `
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:#0f0f11;border:1px solid var(--border);border-radius:14px;">
+        <span style="font-size:22px;flex-shrink:0;">${icon}</span>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:#fff;margin-bottom:2px;">${action}</div>
+          <div style="font-size:13px;color:#a1a1aa;line-height:1.5;">${desc}</div>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+
+    `,
+    notes: "Before you move to the quiz, take two minutes to write down at least one action step you're actually going to take this week. \n\nThe difference between people who improve their financial situation and those who don't usually comes down to one thing — whether they do something with what they learned. \n\nDon't leave this slide empty-handed."
+  },
+  {
+    id: 'quiz',
+    title: 'Week 1 Quiz',
+    isQuiz: true,
+    html: '', // rendered dynamically
+    notes: null
+  }
+];
+
+// ── Quiz State ────────────────────────────────────────────────────────────────
+let quizState = {
+  current: 0,
+  answers: {},
+  submitted: {},
+  score: 0,
+  complete: false,
+  attempts: parseInt(localStorage.getItem('mm_week1_attempts') || '0'),
+};
+
+function renderQuiz() {
+  const q = quizQuestions[quizState.current];
+  const isAnswered = quizState.submitted[quizState.current] !== undefined;
+  const chosen = quizState.answers[quizState.current];
+  const total = quizQuestions.length;
+  const qNum = quizState.current + 1;
+
+  return `
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <span class="pill pill-orange">Question ${qNum} of ${total}</span>
+        <span style="font-size:13px;color:var(--muted);">Score: <strong style="color:#fff;">${quizState.score}</strong> / ${Object.keys(quizState.submitted).length}</span>
+      </div>
+
+      <div style="background:#0f0f11;border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:24px;">
+        <h3 style="font-size:1.1rem;line-height:1.6;color:#fff;font-weight:600;">${q.q}</h3>
+      </div>
+
+      <div id="quiz-options">
+        ${q.options.map((opt, i) => {
+          let cls = 'quiz-option';
+          if (isAnswered) {
+            if (i === q.correct) cls += ' correct';
+            else if (i === chosen && i !== q.correct) cls += ' wrong';
+          } else if (i === chosen) cls += ' selected';
+          return `<button class="${cls}" onclick="selectAnswer(${i})" ${isAnswered ? 'disabled' : ''}>
+            <div class="option-dot"></div>
+            <span>${opt}</span>
+          </button>`;
+        }).join('')}
+      </div>
+
+      ${isAnswered ? `
+        <div style="margin-top:20px;padding:16px 20px;background:${chosen === q.correct ? '#0a1f0a' : '#1f0a0a'};border:1px solid ${chosen === q.correct ? '#166534' : '#7f1d1d'};border-radius:12px;">
+          <p style="font-size:14px;color:${chosen === q.correct ? '#4ade80' : '#fca5a5'};line-height:1.6;">
+            <strong>${chosen === q.correct ? '✓ Correct!' : '✗ Not quite.'}</strong> ${q.explanation}
+          </p>
+        </div>
+        <div style="display:flex;justify-content:${quizState.current < total - 1 ? 'flex-end' : 'space-between'};margin-top:16px;gap:12px;flex-wrap:wrap;">
+          ${quizState.current === total - 1 ? `<button class="btn-secondary" onclick="restartQuiz()">🔄 Retake Quiz</button>` : ''}
+          ${quizState.current < total - 1 
+            ? `<button class="btn-primary" onclick="nextQuestion()">Next Question →</button>`
+            : `<button class="btn-primary" onclick="finishQuiz()">See Final Score 🎉</button>`
+          }
+        </div>
+      ` : `
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+          <button class="btn-primary" onclick="submitAnswer()" ${chosen === undefined ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>Submit Answer</button>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function renderQuizComplete() {
+  const pct = Math.round((quizState.score / quizQuestions.length) * 100);
+  const grade = pct >= 85 ? ['🏆', 'Excellent!', '#4ade80'] : pct >= 70 ? ['🎯', 'Good Work!', 'var(--orange)'] : ['📚', 'Keep Studying', '#f87171'];
+  return `
+    <div style="text-align:center;padding:40px 20px;">
+      <div style="font-size:4rem;margin-bottom:16px;">${grade[0]}</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:${grade[2]};">${grade[1]}</h2>
+      <div style="font-size:5rem;font-weight:900;color:#fff;margin:16px 0;">${pct}<span style="font-size:2rem;color:var(--muted);">%</span></div>
+      <p style="color:var(--muted);margin-bottom:8px;">You answered ${quizState.score} of ${quizQuestions.length} correctly</p>
+      <p style="color:#a1a1aa;font-size:13px;margin-bottom:32px;">Attempt #${quizState.attempts}</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="restartQuiz()">🔄 Retake Quiz</button>
+        <button class="btn-primary" onclick="shareScore(${quizState.score}, ${quizQuestions.length})">📊 Share My Score</button>
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(i) {
+  if (quizState.submitted[quizState.current] !== undefined) return;
+  quizState.answers[quizState.current] = i;
+  document.getElementById('content').querySelector('#quiz-options, .quiz-option')?.closest('div');
+  updateQuizDisplay();
+}
+
+function updateQuizDisplay() {
+  const quizDiv = document.getElementById('quiz-container');
+  if (quizDiv) quizDiv.innerHTML = renderQuiz();
+}
+
+function submitAnswer() {
+  const chosen = quizState.answers[quizState.current];
+  if (chosen === undefined) return;
+  quizState.submitted[quizState.current] = chosen;
+  if (chosen === quizQuestions[quizState.current].correct) quizState.score++;
+  updateQuizDisplay();
+}
+
+function nextQuestion() {
+  if (quizState.current < quizQuestions.length - 1) {
+    quizState.current++;
+    updateQuizDisplay();
+  }
+}
+
+function finishQuiz() {
+  quizState.complete = true;
+  quizState.attempts++;
+  unlockedAll = true;
+  localStorage.setItem('mm_week1_attempts', quizState.attempts);
+  localStorage.setItem('mm_week1_unlocked', 'true');
+  const quizDiv = document.getElementById('quiz-container');
+  if (quizDiv) quizDiv.innerHTML = renderQuizComplete();
+  renderToc();
+  const nav = document.getElementById('footer-nav');
+  if (nav) nav.querySelector('button.btn-primary').textContent = '🏆 View Leaderboard';
+  if (nav) nav.querySelector('button.btn-primary').onclick = openLeaderboard;
+  if (nav) nav.querySelector('button.btn-primary').removeAttribute('disabled');
+  if (nav) nav.querySelector('button.btn-primary').style.opacity = '1';
+  if (nav) nav.querySelector('button.btn-primary').style.cursor = 'pointer';
+}
+
+function restartQuiz() {
+  quizState = { current:0, answers:{}, submitted:{}, score:0, complete:false, attempts: quizState.attempts };
+  const quizDiv = document.getElementById('quiz-container');
+  if (quizDiv) quizDiv.innerHTML = renderQuiz();
+}
+
+function shareScore(score, total) {
+  document.getElementById('optin-modal').style.display = 'flex';
+  document.getElementById('nickname-input').value = '';
+  document.getElementById('nickname-msg').textContent = '';
+  document.getElementById('optin-modal').dataset.score = score;
+  document.getElementById('optin-modal').dataset.total = total;
+}
+
+function submitScore() {
+  const nickname = document.getElementById('nickname-input').value.trim();
+  const score = parseInt(document.getElementById('optin-modal').dataset.score);
+  const total = parseInt(document.getElementById('optin-modal').dataset.total);
+  if (!nickname) { document.getElementById('nickname-msg').textContent = 'Please enter a nickname.'; return; }
+  saveScore(nickname, score, quizState.attempts);
+  document.getElementById('optin-modal').style.display = 'none';
+  openLeaderboard();
+}
+
+function openLeaderboard() {
+  const scores = getScores();
+  const list = document.getElementById('lb-list');
+  if (scores.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px 0;">No scores yet. Be the first!</p>';
+  } else {
+    list.innerHTML = scores.slice(0, 10).map((s, i) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+        <div style="width:28px;text-align:center;font-weight:800;color:${i===0?'#facc15':i===1?'#a1a1aa':i===2?'#cd7f32':'var(--muted)'};">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:15px;">${s.nickname}</div>
+          <div style="font-size:12px;color:var(--muted);">${s.attempts > 1 ? `${s.attempts} attempts` : '1 attempt'} · ${s.date || ''}</div>
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--orange);">${s.score}/${quizQuestions.length}</div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('lb-modal').style.display = 'flex';
+}
+
+// ── Main Slide Engine ─────────────────────────────────────────────────────────
+let current = 0;
+const completed = new Set();
+let unlockedAll = localStorage.getItem('mm_week1_unlocked') === 'true';
+
+function renderToc() {
+  ['desktop-toc', 'mobile-toc'].forEach(id => {
+    const el = document.getElementById(id);
+    const isMobile = id === 'mobile-toc';
+    el.innerHTML = '';
+    slides.forEach((slide, i) => {
+      const isActive = current === i;
+      const isDone = completed.has(i);
+      const isLocked = !unlockedAll && i > 0 && !completed.has(i-1) && i !== current;
+      if (isMobile) {
+        const btn = document.createElement('button');
+        btn.style.cssText = `flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid ${isActive?'var(--orange)':isDone?'#166534':completed.has(i-1)||i===0?'var(--border)':'var(--border)'};background:${isActive?'var(--orange)':isDone?'#0a1f0a':'transparent'};color:${isActive?'#000':isDone?'#4ade80':'var(--muted)'};font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:${isLocked?'not-allowed':'pointer'};white-space:nowrap;opacity:${isLocked?0.4:1};`;
+        btn.textContent = slide.title;
+        btn.onclick = () => { if (!isLocked) { current = i; render(); } };
+        el.appendChild(btn);
+      } else {
+        const btn = document.createElement('button');
+        btn.className = `toc-btn${isActive?' active':isDone?' done':''}`;
+        if (isLocked) btn.disabled = true;
+        btn.innerHTML = `<div class="toc-num">${isDone?'✓':i+1}</div><span style="flex:1;font-size:13px;">${slide.title}</span>`;
+        btn.onclick = () => { if (!isLocked) { current = i; render(); } };
+        el.appendChild(btn);
+      }
+    });
+  });
+}
+
+function render() {
+  renderToc();
+  const progress = ((current + 1) / slides.length) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+
+  const slide = slides[current];
+  const content = document.getElementById('content');
+
+  let innerHtml = '';
+  if (slide.isQuiz) {
+    innerHtml = `<div class="slide-in"><span class="pill pill-orange" style="margin-bottom:16px;display:inline-block;">Assessment</span><h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:28px;">Week 1 Quiz</h2><div id="quiz-container">${quizState.complete ? renderQuizComplete() : renderQuiz()}</div></div>`;
+  } else {
+    innerHtml = `<div class="slide-in">${slide.html}</div>`;
+  }
+
+  if (slide.notes) {
+    innerHtml += `
+      <div style="margin-top:32px;">
+        <button class="notes-toggle" id="notes-btn" onclick="toggleNotes()">
+          <span>📝 Recap</span>
+          <span id="notes-arrow">▼</span>
+        </button>
+        <div class="notes-panel" id="notes-panel">
+          <div class="notes-inner">${slide.notes.replace(/\n/g, '<br>')}</div>
+        </div>
+      </div>
+    `;
+  }
+
+content.innerHTML = innerHtml;
+if (slide.id === 'current-path') setTimeout(cpAnimate, 100);
+if (slide.id === 'risk-tolerance') setTimeout(rtRender, 100);
+if (slide.id === 'where-do-you-stand') setTimeout(wdsUpdate, 100);
+if (slide.id === 'income-gap') setTimeout(igUpdate, 100);
+if (slide.id === 'integrated') setTimeout(gearAnimate, 300);
+if (slide.id === 'sequence-risk') setTimeout(srrAnimate, 400);
+const nav = document.getElementById('footer-nav');
+  const isRiskSlide = slide.id === 'risk-tolerance';
+  const riskComplete = rtState && rtState.complete;
+const isLastSlide = current === slides.length - 1;
+  const quizDone = quizState.complete;
+  const quizReady = isLastSlide && !quizDone && Object.keys(quizState.submitted).length === quizQuestions.length;
+  nav.innerHTML = `
+    <button class="btn-secondary" onclick="prev()" ${current === 0 ? 'disabled' : ''}>← Previous</button>
+    <span style="font-size:13px;color:var(--muted);">${current + 1} / ${slides.length}</span>
+    <button class="btn-primary"
+      onclick="${isRiskSlide && !riskComplete ? 'promptRiskNext()' : quizReady ? 'finishQuiz()' : isLastSlide && quizDone ? 'openLeaderboard()' : 'next()'}"
+      ${isLastSlide && !quizDone && !quizReady ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>
+      ${quizReady ? 'Finish Week 1 ✓' : isLastSlide && quizDone ? '🏆 View Leaderboard' : 'Next →'}
+    </button>
+  `;
+}
+
+function toggleNotes() {
+  const panel = document.getElementById('notes-panel');
+  const btn = document.getElementById('notes-btn');
+  const arrow = document.getElementById('notes-arrow');
+  panel.classList.toggle('open');
+  btn.classList.toggle('open');
+  arrow.textContent = panel.classList.contains('open') ? '▲' : '▼';
+}
+
+function next() {
+  if (current < slides.length - 1) {
+    completed.add(current);
+    current++;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function prev() {
+  if (current > 0) { current--; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+// ── Current Path Chart ───────────────────────────────────────────────────────
+const cpData = [
+  { age: 67, funds: 2188048 }, { age: 68, funds: 2174209 },
+  { age: 69, funds: 2124743 }, { age: 70, funds: 2053973 },
+  { age: 71, funds: 1967702 }, { age: 72, funds: 1815424 },
+  { age: 73, funds: 1638967 }, { age: 74, funds: 1438697 },
+  { age: 75, funds: 1274821 }, { age: 76, funds: 1094813 },
+  { age: 77, funds: 895235  }, { age: 78, funds: 673918  },
+  { age: 79, funds: 428966  }, { age: 80, funds: 186857  },
+  { age: 81, funds: 0 }, { age: 82, funds: 0 },
+  { age: 83, funds: 0 }, { age: 84, funds: 0 }, { age: 85, funds: 0 },
+];
+const cpMax = Math.max(...cpData.map(d => d.funds));
+
+function cpFmt(n) {
+  if (n === 0) return '$0';
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+  return '$' + Math.round(n/1000) + 'k';
+}
+
+function cpBuildChart() {
+  const chart = document.getElementById('cp-chart');
+  const labels = document.getElementById('cp-labels');
+  if (!chart || !labels) return;
+  chart.innerHTML = '';
+  labels.innerHTML = '';
+  cpData.forEach((d, i) => {
+    const bar = document.createElement('div');
+    bar.style.cssText = 'border-radius:4px 4px 0 0;flex:1;min-width:0;height:0px;opacity:0.15;transition:height 0.2s;cursor:pointer;';
+    bar.style.background = d.funds === 0 ? '#3f3f46' : (d.funds/cpMax) > 0.5 ? '#4ade80' : (d.funds/cpMax) > 0.2 ? '#f97316' : '#ef4444';
+    bar.id = 'cp-bar-' + i;
+    bar.addEventListener('mouseenter', function() {
+      let tip = document.getElementById('cp-tooltip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'cp-tooltip';
+        tip.style.cssText = 'position:fixed;background:#1c1c1f;border:1px solid #f97316;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#fff;pointer-events:none;z-index:999;';
+        document.body.appendChild(tip);
+      }
+      tip.textContent = 'Age ' + d.age + ': ' + cpFmt(d.funds);
+      tip.style.display = 'block';
+    });
+    bar.addEventListener('mousemove', function(e) {
+      const tip = document.getElementById('cp-tooltip');
+      if (tip) {
+        tip.style.left = (e.clientX + 12) + 'px';
+        tip.style.top = (e.clientY - 36) + 'px';
+      }
+    });
+    bar.addEventListener('mouseleave', function() {
+      const tip = document.getElementById('cp-tooltip');
+      if (tip) tip.style.display = 'none';
+    });
+    chart.appendChild(bar);
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:10px;color:#71717a;text-align:center;flex:1;min-width:0;padding-top:4px;';
+    lbl.textContent = d.age % 2 === 0 ? d.age : '';
+    labels.appendChild(lbl);
+  });
+}
+
+// ── Risk Tolerance Assessment ─────────────────────────────────────────────────
+const rtQuestions = [
+  {
+    q: "Your portfolio drops 22% in 3 months. You...",
+    label: "The Drop",
+    options: [
+      { text: "Sell everything and move to cash", score: 1 },
+      { text: "Feel nervous but hold steady", score: 2 },
+      { text: "Buy more while prices are low", score: 3 },
+    ]
+  },
+  {
+    q: "You can take a guaranteed $40,000, or flip a coin. Heads you get $90,000. Tails you get nothing. Which do you choose?",
+    label: "The Choice",
+    options: [
+      { text: "Take the $40,000 — I'm not risking walking away empty", score: 1 },
+      { text: "Probably take the guaranteed money, but it's tempting", score: 2 },
+      { text: "Take the flip — the $90,000 is worth the risk of zero", score: 3 },
+    ]
+  },
+  {
+    q: "You won't touch this money for...",
+    label: "The Timeline",
+    options: [
+      { text: "Less than 5 years", score: 1 },
+      { text: "5–15 years", score: 2 },
+      { text: "15+ years", score: 3 },
+    ]
+  },
+  {
+    q: "Markets are crashing and it's all over the news. You...",
+    label: "The News",
+    options: [
+      { text: "Lose sleep and check your balance daily", score: 1 },
+      { text: "Stay cautious but trust the long game", score: 2 },
+      { text: "Tune it out — you've seen this before", score: 3 },
+    ]
+  },
+  {
+    q: "Which portfolio feels right to you?",
+    label: "The Tradeoff",
+    options: [
+      { text: "Might lose 5%, might gain 10%", score: 1 },
+      { text: "Might lose 15%, might gain 25%", score: 2 },
+      { text: "Might lose 30%, might gain 50%", score: 3 },
+    ]
+  },
+  {
+    q: "You unexpectedly receive $50,000. You...",
+    label: "The Windfall",
+    options: [
+      { text: "Put it all in a savings account", score: 1 },
+      { text: "Split it between safe and invested", score: 2 },
+      { text: "Invest the majority aggressively", score: 3 },
+    ]
+  },
+  {
+    q: "Your #1 goal for this money is...",
+    label: "The Finish Line",
+    options: [
+      { text: "Protect what I have", score: 1 },
+      { text: "Grow steadily without big swings", score: 2 },
+      { text: "Maximize growth, I can handle the ride", score: 3 },
+    ]
+  },
+];
+
+const rtProfiles = {
+  conservative: {
+    label: "Cash Flow Mindset",
+    emoji: "🛡️",
+    color: "#22d3ee",
+    bg: "#001f24",
+    border: "#0e7490",
+    description: "You prioritize protecting what you have over chasing big returns. Stability and predictability matter more to you than upside potential — and that's a completely valid strategy, especially as you near retirement.",
+    buckets: "Your plan should lean heavily on the Income and Cash buckets. Growth exposure should be limited and carefully managed. Real Estate can provide stability with some upside."
+  },
+  moderate: {
+    label: "Balanced Mindset",
+    emoji: "⚖️",
+    color: "#f97316",
+    bg: "#1a0f00",
+    border: "#c2500f",
+    description: "You want your money to grow but you're not willing to lose sleep over it. You can handle some volatility as long as the long-term direction is up. This is the most common profile — and the Infinity Buckets model was built with you in mind.",
+    buckets: "The standard 10/30/30/30 split is a strong starting point. Balance across all four buckets with a moderate tilt toward Growth as time allows."
+  },
+  aggressive: {
+    label: "Growth Mindset",
+    emoji: "🚀",
+    color: "#f87171",
+    bg: "#1f0a0a",
+    border: "#7f1d1d",
+    description: "You're comfortable with big swings in exchange for bigger long-term gains. Short-term drops don't rattle you — you see them as buying opportunities. Just make sure your timeline actually supports this approach.",
+    buckets: "Weight your Growth bucket more heavily, up to 40–50% if your timeline supports it. Keep Cash lean at 5–10% and make sure your Income bucket is still building for eventual retirement needs."
+  }
+};
+
+let rtState = { current: 0, answers: [], complete: false };
+
+function rtGetProfile(total) {
+  if (total <= 10) return rtProfiles.conservative;
+  if (total <= 16) return rtProfiles.moderate;
+  return rtProfiles.aggressive;
+}
+
+function rtRender() {
+  const container = document.getElementById('rt-container');
+  if (!container) return;
+
+  if (rtState.complete) {
+    const total = rtState.answers.reduce((a, b) => a + b, 0);
+    const profile = rtGetProfile(total);
+    container.innerHTML = `
+      <div style="text-align:center;padding:32px 20px;background:${profile.bg};border:1px solid ${profile.border};border-radius:20px;margin-bottom:20px;">
+        <div style="font-size:3.5rem;margin-bottom:12px;">${profile.emoji}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:${profile.color};margin-bottom:16px;">${profile.label} Investor</div>
+        <p style="color:#d4d4d8;font-size:15px;line-height:1.75;max-width:520px;margin:0 auto 24px;">${profile.description}</p>
+        <div style="background:#00000033;border-radius:12px;padding:16px 20px;text-align:left;max-width:520px;margin:0 auto;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:${profile.color};font-weight:700;margin-bottom:8px;">What This Means For Your Buckets</div>
+          <p style="color:#a1a1aa;font-size:14px;line-height:1.65;">${profile.buckets}</p>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <button onclick="rtRestart()" style="padding:12px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;">
+          Retake Assessment
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const q = rtQuestions[rtState.current];
+  const qNum = rtState.current + 1;
+  const total = rtQuestions.length;
+
+  container.innerHTML = `
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+        <span class="pill pill-orange">Question ${qNum} of ${total} — ${q.label}</span>
+        <span style="font-size:13px;color:var(--muted);">${Math.round((qNum/total)*100)}% complete</span>
+      </div>
+      <div style="height:4px;background:var(--border);border-radius:999px;margin-bottom:24px;">
+        <div style="height:100%;background:var(--orange);border-radius:999px;width:${Math.round((qNum/total)*100)}%;transition:width 0.3s;"></div>
+      </div>
+      <div style="background:#0f0f11;border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:20px;">
+        <h3 style="font-size:1.1rem;line-height:1.6;color:#fff;font-weight:600;">${q.q}</h3>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${q.options.map((opt, i) => `
+          <button onclick="rtSelect(${opt.score})" style="display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:12px;border:1px solid var(--border);background:var(--card);cursor:pointer;text-align:left;width:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--orange)';this.style.background='#1a0f00'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--card)'">
+            <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;margin-top:1px;"></div>
+            <span>${opt.text}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function rtSelect(score) {
+  rtState.answers.push(score);
+  if (rtState.current < rtQuestions.length - 1) {
+    rtState.current++;
+    rtRender();
+  } else {
+    rtState.complete = true;
+    rtRender();
+  }
+}
+
+function rtRestart() {
+  rtState = { current: 0, answers: [], complete: false };
+  rtRender();
+}
+
+function promptRiskNext() {
+  const nav = document.getElementById('footer-nav');
+  nav.innerHTML = `
+    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <p style="font-size:14px;color:#facc15;font-weight:600;">⚠️ Have you completed your risk assessment? It only takes 2 minutes.</p>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-secondary" onclick="next()">Skip for Now</button>
+        <button class="btn-primary" onclick="render()">Take the Assessment</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── Sequence of Return Risk ───────────────────────────────────────────────────
+const srrReturns = {
+  a: [-0.25, -0.22, -0.28, 0.12, 0.15, 0.18, 0.14, 0.12, 0.16, 0.15, 0.18, 0.14, 0.16, 0.18, 0.15, 0.14, 0.12, 0.16, 0.18, 0.15],
+  b: [ 0.15, 0.18, 0.16, 0.12, 0.14, 0.15, 0.18, 0.16, 0.14, 0.18, 0.15, 0.16, 0.12, 0.14, 0.18, 0.15, 0.12, -0.28, -0.22, -0.25],
+};
+const srrStart = 500000;
+const srrWithdraw = 30000;
+
+function srrCalcBalances(returns) {
+  let bal = srrStart;
+  const balances = [bal];
+  returns.forEach(r => {
+    bal = bal * (1 + r) - srrWithdraw;
+    balances.push(Math.max(0, bal));
+  });
+  return balances;
+}
+
+function srrFmt(n) {
+  if (n === 0) return '$0';
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+  return '$' + Math.round(n/1000) + 'k';
+}
+
+function srrBuildChart(chartId, balances, color, max) {
+  const chart = document.getElementById(chartId);
+  if (!chart) return;
+  chart.innerHTML = '';
+  balances.forEach((b, i) => {
+    if (i === 0) return;
+    const bar = document.createElement('div');
+    const pct = b / max;
+    bar.style.cssText = 'flex:1;min-width:0;height:0px;opacity:0.15;border-radius:3px 3px 0 0;transition:height 0.2s;';
+    bar.style.background = b === 0 ? '#3f3f46' : pct > 0.5 ? color : pct > 0.2 ? '#f97316' : '#ef4444';
+    bar.id = chartId + '-bar-' + i;
+    bar.addEventListener('mouseenter', function() {
+      let tip = document.getElementById('srr-tooltip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'srr-tooltip';
+        tip.style.cssText = 'position:fixed;background:#1c1c1f;border:1px solid #f97316;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#fff;pointer-events:none;z-index:999;';
+        document.body.appendChild(tip);
+      }
+      tip.textContent = 'Year ' + i + ': ' + srrFmt(b);
+      tip.style.display = 'block';
+    });
+    bar.addEventListener('mousemove', function(e) {
+      const tip = document.getElementById('srr-tooltip');
+      if (tip) { tip.style.left = (e.clientX + 12) + 'px'; tip.style.top = (e.clientY - 36) + 'px'; }
+    });
+    bar.addEventListener('mouseleave', function() {
+      const tip = document.getElementById('srr-tooltip');
+      if (tip) tip.style.display = 'none';
+    });
+    chart.appendChild(bar);
+  });
+}
+
+function srrAnimate() {
+  const balA = srrCalcBalances(srrReturns.a);
+  const balB = srrCalcBalances(srrReturns.b);
+  const srrMax = Math.max(...balA, ...balB);
+  srrBuildChart('srr-chart-a', balA, '#4ade80', srrMax);
+  srrBuildChart('srr-chart-b', balB, '#4ade80', srrMax);
+  const yearLabel = document.getElementById('srr-year-label');
+  let i = 1;
+  function step() {
+    if (i >= balA.length) {
+      if (yearLabel) yearLabel.textContent = 'Portfolio A depleted at Year ' + (balA.findIndex(b => b === 0)) + ' — Portfolio B survives';
+      return;
+    }
+    const barA = document.getElementById('srr-chart-a-bar-' + i);
+    const barB = document.getElementById('srr-chart-b-bar-' + i);
+    if (barA) { barA.style.height = (balA[i] === 0 ? 4 : Math.max(4, Math.round((balA[i]/srrMax)*110))) + 'px'; barA.style.opacity = '1'; }
+    if (barB) { barB.style.height = (balB[i] === 0 ? 4 : Math.max(4, Math.round((balB[i]/srrMax)*110))) + 'px'; barB.style.opacity = '1'; }
+    if (yearLabel) yearLabel.textContent = 'Year ' + i + '  |  A: ' + srrFmt(balA[i]) + '  —  B: ' + srrFmt(balB[i]);
+    i++;
+    setTimeout(step, 300);
+  }
+  step();
+}
+
+function srrToggleTable() {
+  const table = document.getElementById('srr-table');
+  const btn = document.getElementById('srr-table-btn');
+  if (!table || !btn) return;
+
+  if (table.style.display === 'none') {
+    const balA = srrCalcBalances(srrReturns.a);
+    const balB = srrCalcBalances(srrReturns.b);
+    const tbody = document.getElementById('srr-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    for (let i = 1; i <= 20; i++) {
+      const retA = srrReturns.a[i-1];
+      const retB = srrReturns.b[i-1];
+      const bA = balA[i];
+      const bB = balB[i];
+      const isLossA = retA < 0;
+      const isLossB = retB < 0;
+      const row = document.createElement('tr');
+      row.style.borderBottom = '1px solid #1c1c1f';
+      row.innerHTML = `
+        <td style="padding:10px 12px;color:var(--muted);font-weight:700;">Year ${i}</td>
+        <td style="padding:10px 12px;text-align:right;color:${isLossA ? '#f87171' : '#4ade80'};font-weight:700;">
+          ${isLossA ? '' : '+'}${Math.round(retA * 100)}%
+        </td>
+        <td style="padding:10px 12px;text-align:right;color:${bA === 0 ? '#3f3f46' : '#fff'};">
+          ${bA === 0 ? 'Depleted' : srrFmt(bA)}
+        </td>
+        <td style="padding:10px 12px;text-align:right;color:${isLossB ? '#f87171' : '#4ade80'};font-weight:700;">
+          ${isLossB ? '' : '+'}${Math.round(retB * 100)}%
+        </td>
+        <td style="padding:10px 12px;text-align:right;color:#fff;">
+          ${srrFmt(bB)}
+        </td>
+      `;
+      tbody.appendChild(row);
+    }
+    const startRow = document.createElement('tr');
+    startRow.style.borderBottom = '1px solid var(--border)';
+    startRow.innerHTML = `
+      <td style="padding:10px 12px;color:var(--muted);font-weight:700;">Start</td>
+      <td style="padding:10px 12px;text-align:right;color:var(--muted);">—</td>
+      <td style="padding:10px 12px;text-align:right;color:#fff;">$500k</td>
+      <td style="padding:10px 12px;text-align:right;color:var(--muted);">—</td>
+      <td style="padding:10px 12px;text-align:right;color:#fff;">$500k</td>
+    `;
+    tbody.insertBefore(startRow, tbody.firstChild);
+    table.style.display = 'block';
+    btn.textContent = '🔼 Hide The Numbers';
+  } else {
+    table.style.display = 'none';
+    btn.textContent = '🔍 Show Me The Numbers';
+  }
+}
+
+// ── Where Do You Stand ────────────────────────────────────────────────────────
+function wdsFormat(val) {
+  const n = parseInt(val.replace(/[^0-9]/g, '')) || 0;
+  return n.toLocaleString();
+}
+
+function wdsUpdate() {
+  const ids = ['income', 'realestate', 'growth', 'cash'];
+  const targets = { income: 30, realestate: 30, growth: 30, cash: 10 };
+  const colors = { income: '#22d3ee', realestate: '#f97316', growth: '#f87171', cash: '#facc15' };
+  const labels = { income: 'Income', realestate: 'Real Estate', growth: 'Growth', cash: 'Cash' };
+
+  // Format inputs
+  ids.forEach(id => {
+    const input = document.getElementById('bucket-' + id);
+    if (!input) return;
+    const raw = input.value.replace(/[^0-9]/g, '');
+    const cursor = input.selectionStart;
+    input.value = raw ? parseInt(raw).toLocaleString() : '';
+    try { input.setSelectionRange(cursor, cursor); } catch(e) {}
+  });
+
+  // Calculate totals
+  const values = {};
+  let total = 0;
+  ids.forEach(id => {
+    const input = document.getElementById('bucket-' + id);
+    const val = input ? parseInt(input.value.replace(/[^0-9]/g, '')) || 0 : 0;
+    values[id] = val;
+    total += val;
+  });
+
+  // Update total
+  const totalEl = document.getElementById('wds-total');
+  if (totalEl) totalEl.textContent = 'Total Portfolio: $' + total.toLocaleString();
+
+  if (total === 0) return;
+
+  // Update bars and percentages
+  const issues = [];
+  ids.forEach(id => {
+    const pct = Math.round((values[id] / total) * 100);
+    const target = targets[id];
+    const bar = document.getElementById('wds-bar-' + id);
+    const pctEl = document.getElementById('wds-pct-' + id);
+    if (bar) bar.style.width = Math.min(pct, 100) + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+
+    const diff = pct - target;
+    if (values[id] === 0) {
+      issues.push({ id, label: labels[id], type: 'missing', pct, target, diff });
+    } else if (diff > 10) {
+      issues.push({ id, label: labels[id], type: 'heavy', pct, target, diff });
+    } else if (diff < -10) {
+      issues.push({ id, label: labels[id], type: 'light', pct, target, diff });
+    }
+  });
+
+  // Build verdict
+  const verdict = document.getElementById('wds-verdict');
+  if (!verdict) return;
+
+  if (issues.length === 0) {
+    verdict.style.background = '#0a1f0a';
+    verdict.style.border = '1px solid #166534';
+    verdict.innerHTML = '<p style="color:#4ade80;font-size:14px;line-height:1.7;">✓ <strong>Well balanced.</strong> Your current allocation is close to the 10/30/30/30 target across all four buckets.</p>';
+    return;
+  }
+
+  const missing = issues.filter(i => i.type === 'missing').map(i => i.label);
+  const heavy = issues.filter(i => i.type === 'heavy').map(i => i.label + ' (' + i.pct + '%)');
+  const light = issues.filter(i => i.type === 'light').map(i => i.label + ' (' + i.pct + '%)');
+
+  let text = '';
+  if (missing.length) text += 'Your portfolio has <strong style="color:#f87171;">no ' + missing.join(' or ') + ' bucket</strong>. ';
+  if (heavy.length) text += 'You are <strong style="color:#f97316;">heavy in ' + heavy.join(' and ') + '</strong> relative to the target. ';
+  if (light.length) text += 'You are <strong style="color:#facc15;">light in ' + light.join(' and ') + '</strong> relative to the target. ';
+  text += '<br><br><span style="color:#71717a;font-size:13px;">This is for educational purposes only. Consider discussing your allocation with a qualified financial professional.</span>';
+
+  verdict.style.background = '#1a0f00';
+  verdict.style.border = '1px solid #c2500f';
+  verdict.innerHTML = '<p style="color:#d4c5a0;font-size:14px;line-height:1.75;">' + text + '</p>';
+}
+
+// ── Income Gap Visualizer ─────────────────────────────────────────────────────
+function igParse(id) {
+  const el = document.getElementById(id);
+  return el ? parseInt(el.value.replace(/[^0-9]/g, '')) || 0 : 0;
+}
+
+function igFmt(n) {
+  return '$' + n.toLocaleString();
+}
+
+function igSliderUpdate(field) {
+  const slider = document.getElementById('ig-' + field + '-slider');
+  const input = document.getElementById('ig-' + field);
+  if (!slider || !input) return;
+  input.value = parseInt(slider.value).toLocaleString();
+  igUpdate();
+}
+
+function igUpdate() {
+  const expenses = igParse('ig-expenses');
+  const ss = igParse('ig-ss');
+  const other = igParse('ig-other');
+  const gap = Math.max(0, expenses - ss - other);
+  const totalIncome = ss + other;
+
+  // Sync sliders
+  ['expenses', 'ss', 'other'].forEach(field => {
+    const input = document.getElementById('ig-' + field);
+    const slider = document.getElementById('ig-' + field + '-slider');
+    if (input && slider) {
+      const raw = parseInt(input.value.replace(/[^0-9]/g, '')) || 0;
+      slider.value = raw;
+      input.value = raw.toLocaleString();
+    }
+  });
+
+  // Update expense label
+  const expLabel = document.getElementById('ig-expenses-label');
+  if (expLabel) expLabel.textContent = 'Monthly Expenses: ' + igFmt(expenses);
+
+  // Update bar widths
+  const ssPct = expenses > 0 ? Math.min((ss / expenses) * 100, 100) : 0;
+  const otherPct = expenses > 0 ? Math.min((other / expenses) * 100, 100 - ssPct) : 0;
+  const gapPct = expenses > 0 ? Math.max(0, 100 - ssPct - otherPct) : 0;
+
+  const barSS = document.getElementById('ig-bar-ss');
+  const barOther = document.getElementById('ig-bar-other');
+  const barGap = document.getElementById('ig-bar-gap');
+
+  if (barSS) barSS.style.width = ssPct + '%';
+  if (barOther) { barOther.style.left = ssPct + '%'; barOther.style.width = otherPct + '%'; }
+  if (barGap) { barGap.style.left = (ssPct + otherPct) + '%'; barGap.style.width = gapPct + '%'; }
+
+  // Update numbers
+  const numSS = document.getElementById('ig-num-ss');
+  const numOther = document.getElementById('ig-num-other');
+  const numGap = document.getElementById('ig-num-gap');
+  if (numSS) numSS.textContent = igFmt(ss) + '/mo';
+  if (numOther) numOther.textContent = igFmt(other) + '/mo';
+  if (numGap) numGap.textContent = igFmt(gap) + '/mo';
+
+  // Verdict
+  const verdict = document.getElementById('ig-verdict');
+  if (!verdict) return;
+  const annual = gap * 12;
+
+  if (gap === 0) {
+    verdict.style.background = 'linear-gradient(135deg,#0a1f0a,#051005)';
+    verdict.style.borderColor = '#166534';
+    verdict.style.borderLeftColor = '#4ade80';
+    verdict.innerHTML = '<p style="color:#4ade80;font-size:15px;line-height:1.75;">✓ <strong>Your income sources cover your estimated expenses.</strong> Make sure these income streams are reliable and inflation-protected as you move through retirement.</p>';
+  } else {
+    verdict.style.background = 'linear-gradient(135deg,#1a0f00,#0f0900)';
+    verdict.style.borderColor = '#3d2f00';
+    verdict.style.borderLeftColor = '#f97316';
+    verdict.innerHTML = `
+      <p style="color:#d4c5a0;font-size:15px;line-height:1.75;margin-bottom:12px;">
+        Your income sources leave a <strong style="color:#f97316;">${igFmt(gap)}/month gap</strong> — that's <strong style="color:#f97316;">${igFmt(annual)}/year</strong> your investment buckets need to generate.
+      </p>
+      <p style="color:#71717a;font-size:13px;line-height:1.6;">
+        This gap can be filled through a combination of your Income, Real Estate, and Growth buckets. The size of this number should directly shape how you allocate across all four buckets — and will be a key focus throughout the rest of this course.
+      </p>
+    `;
+  }
+}
+
+// ── Bucket Explorer ───────────────────────────────────────────────────────────
+const bucketDetails = {
+  income: {
+    color: '#22d3ee',
+    bg: '#001f24',
+    border: '#0e7490',
+    label: 'Income Bucket',
+    description: 'The Income bucket holds assets designed to generate reliable, recurring cash flow — the kind that pays your bills while the market is up, down, or sideways.',
+    products: [
+      ['Dividend Stocks & Funds', 'Stocks or funds that regularly distribute a portion of earnings to shareholders as cash.'],
+      ['Bond Ladders', 'A series of bonds with staggered maturity dates designed to provide predictable income over time.'],
+      ['CDs (Certificates of Deposit)', 'Bank-issued savings products that pay fixed interest over a set term — FDIC insured.'],
+      ['Covered Option Strategies', 'Renting out your cash and/or stocks for cash flow, can provide for additional income above dividends.']
+    ]
+  },
+  realestate: {
+    color: '#f97316',
+    bg: '#1a0f00',
+    border: '#c2500f',
+    label: 'Real Estate Bucket',
+    description: 'The Real Estate bucket holds property-based assets that can generate income, appreciate in value, and provide a hedge against inflation.',
+    products: [
+      ['Rental Properties', 'Physical properties you own and rent out, generating monthly cash flow and long-term appreciation.'],
+      ['REITs', 'Real Estate Investment Trusts — companies that own income-producing real estate you can invest in like a stock.'],
+      ['Real Estate Syndications', 'Pooled investments where multiple investors fund a larger real estate deal together.'],
+      ['Hard Money Lending', 'Short-term loans secured by real estate — you act as the lender and earn interest income.'],
+    ]
+  },
+  growth: {
+    color: '#f87171',
+    bg: '#1f0a0a',
+    border: '#7f1d1d',
+    label: 'Growth Bucket',
+    description: 'The Growth bucket holds assets focused on long-term capital appreciation. These carry more volatility but provide the engine for building wealth over time.',
+    products: [
+      ['Index Funds', 'Low-cost funds that track a market index like the S&P 500 — broad diversification in one investment.'],
+      ['ETFs (Exchange Traded Funds)', 'Similar to index funds but traded on exchanges like stocks — flexible and tax efficient.'],
+      ['Individual Stocks', 'Direct ownership in a single company — higher risk but potential for significant upside.'],
+      ['Managed Money', 'Professionally managed accounts by a fidcuiary, taking a diversified approach when compared to the other strategies.'],
+    ]
+  },
+  cash: {
+    color: '#facc15',
+    bg: '#1f1900',
+    border: '#854d0e',
+    label: 'Cash Bucket',
+    description: 'The Cash bucket provides liquidity, stability, and dry powder for opportunities. It is not meant to sit idle — it should be working at the best available, safe rate.',
+    products: [
+      ['High Yield Savings', 'Online savings accounts offering significantly better rates than traditional bank accounts.'],
+      ['Money Market Accounts', 'Bank or brokerage accounts that combine savings rates with limited check-writing flexibility.'],
+      ['Treasury Bills', 'Short-term U.S. government securities — among the safest investments available.'],
+      ['CDs (Short Term)', 'Short-duration certificates of deposit — lock in a rate while keeping funds accessible on a rolling basis.']
+      
+    ]
+  }
+};
+
+let bucketActive = null;
+
+function bucketClick(name) {
+  const panel = document.getElementById('bucket-panel');
+  if (!panel) return;
+  const allBuckets = ['cash','income', 'realestate', 'growth'];
+
+  if (bucketActive === name) {
+    bucketActive = null;
+    panel.style.display = 'none';
+    allBuckets.forEach(b => {
+      const card = document.getElementById('bucket-card-' + b);
+      if (card) card.style.opacity = '1';
+    });
+    return;
+  }
+
+  bucketActive = name;
+  const d = bucketDetails[name];
+
+  allBuckets.forEach(b => {
+    const card = document.getElementById('bucket-card-' + b);
+    if (card) card.style.opacity = b === name ? '1' : '0.4';
+  });
+
+  panel.style.display = 'block';
+  panel.style.background = d.bg;
+  panel.style.border = '1px solid ' + d.border;
+  panel.innerHTML = `
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:${d.color};margin-bottom:8px;">${d.label}</div>
+    <p style="color:#a1a1aa;font-size:14px;line-height:1.7;margin-bottom:20px;">${d.description}</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+      ${d.products.map(([name, desc]) => `
+        <div style="background:#00000033;border:1px solid ${d.border};border-radius:10px;padding:14px 16px;">
+          <div style="font-weight:700;font-size:14px;color:${d.color};margin-bottom:4px;">${name}</div>
+          <p style="font-size:13px;color:#a1a1aa;line-height:1.6;">${desc}</p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── Gear Animation ────────────────────────────────────────────────────────────
+const gearData = {
+  wealth: {
+    color: '#4ade80',
+    bg: '#0a1f0a',
+    border: '#166534',
+    label: 'Wealth',
+    description: 'Wealth planning is about growing and protecting your assets strategically — making sure every dollar is working toward your goals.',
+    without: 'Without it: You accumulate products with no coordinated strategy, leaving gaps in income, growth, and protection.',
+    example: 'Example: A well-structured portfolio that balances Income, Real Estate, Growth, and Cash can sustain retirement for 30+ years.'
+  },
+  tax: {
+    color: '#f97316',
+    bg: '#1a0f00',
+    border: '#c2500f',
+    label: 'Tax',
+    description: 'Tax planning ensures you keep more of what you earn — legally minimizing what goes to the IRS at every stage of your plan.',
+    without: 'Without it: A great investment strategy can quietly lose 20–30% of its gains to taxes that could have been avoided.',
+    example: 'Example: Converting a traditional IRA to a Roth at the right time can save tens of thousands of dollars in retirement.'
+  },
+  legal: {
+    color: '#60a5fa',
+    bg: '#0a0f1f',
+    border: '#1e3a8a',
+    label: 'Legal',
+    description: 'Legal planning protects what you\'ve built — ensuring your assets go where you intend, and that you\'re protected if life takes an unexpected turn.',
+    without: 'Without it: Assets can get stuck in probate, taxed unnecessarily, or distributed in ways you never intended.',
+    example: 'Example: A properly structured trust can pass wealth to your heirs faster, cheaper, and with far less tax exposure than a will alone.'
+  }
+};
+
+let gearActive = null;
+let gearAnimating = false;
+
+function gearAnimate() {
+  const svg = document.getElementById('gear-svg');
+  if (!svg) return;
+  svg.innerHTML = '';
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const gearDefs = [
+    { id: 'wealth', cx: 170, cy: 105, dir: 1,  color: '#4ade80', bg: '#0a1f0a', label: 'WEALTH' },
+    { id: 'tax',    cx: 95,  cy: 210, dir: -1, color: '#f97316', bg: '#1a0f00', label: 'TAX'    },
+    { id: 'legal',  cx: 245, cy: 210, dir: -1, color: '#60a5fa', bg: '#0a0f1f', label: 'LEGAL'  },
+  ];
+
+  const teeth = 12;
+  const innerR = 28;
+  const outerR = 42;
+  const toothW = 0.18;
+
+  function gearPath(cx, cy) {
+    let d = '';
+    for (let i = 0; i < teeth; i++) {
+      const a1 = (i / teeth) * Math.PI * 2;
+      const a2 = a1 + toothW;
+      const a3 = a1 + (Math.PI / teeth) - toothW;
+      const a4 = a1 + (Math.PI / teeth);
+      d += (i === 0 ? 'M' : 'L') +
+        (cx + Math.cos(a1) * innerR) + ',' + (cy + Math.sin(a1) * innerR) + ' L' +
+        (cx + Math.cos(a2) * outerR) + ',' + (cy + Math.sin(a2) * outerR) + ' L' +
+        (cx + Math.cos(a3) * outerR) + ',' + (cy + Math.sin(a3) * outerR) + ' L' +
+        (cx + Math.cos(a4) * innerR) + ',' + (cy + Math.sin(a4) * innerR) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  const groups = [];
+
+  gearDefs.forEach(g => {
+    // Rotating group
+    const grp = document.createElementNS(ns, 'g');
+    grp.id = 'gear-' + g.id + '-g';
+
+    // Gear body
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', gearPath(g.cx, g.cy));
+    path.setAttribute('fill', g.bg);
+    path.setAttribute('stroke', g.color);
+    path.setAttribute('stroke-width', '2');
+    grp.appendChild(path);
+
+    // Inner circle
+    const circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('cx', g.cx);
+    circle.setAttribute('cy', g.cy);
+    circle.setAttribute('r', '18');
+    circle.setAttribute('fill', g.bg);
+    circle.setAttribute('stroke', g.color);
+    circle.setAttribute('stroke-width', '1.5');
+    grp.appendChild(circle);
+
+    svg.appendChild(grp);
+
+    // Label (outside rotating group so it stays upright)
+    const text = document.createElementNS(ns, 'text');
+    text.setAttribute('x', g.cx);
+    text.setAttribute('y', g.cy + 5);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('fill', g.color);
+    text.setAttribute('font-family', 'Bebas Neue, sans-serif');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('style', 'pointer-events:none;');
+    text.textContent = g.label;
+    svg.appendChild(text);
+
+    // Clickable overlay circle
+    const hit = document.createElementNS(ns, 'circle');
+    hit.setAttribute('cx', g.cx);
+    hit.setAttribute('cy', g.cy);
+    hit.setAttribute('r', '42');
+    hit.setAttribute('fill', 'transparent');
+    hit.setAttribute('style', 'cursor:pointer;');
+    hit.addEventListener('click', () => gearClick(g.id));
+    svg.appendChild(hit);
+
+    groups.push({ grp, cx: g.cx, cy: g.cy, dir: g.dir });
+  });
+
+  // Animate
+  let angle = 0;
+  let frames = 0;
+  const maxFrames = 120;
+  function step() {
+    if (frames >= maxFrames) return;
+    angle += 1.5;
+    groups.forEach(g => {
+      g.grp.setAttribute('transform',
+        'rotate(' + (angle * g.dir) + ',' + g.cx + ',' + g.cy + ')'
+      );
+    });
+    frames++;
+    requestAnimationFrame(step);
+  }
+  step();
+}
+
+function gearClick(name) {
+  const panel = document.getElementById('gear-panel');
+  if (!panel) return;
+  const allGears = ['wealth', 'tax', 'legal'];
+
+  if (gearActive === name) {
+    gearActive = null;
+    panel.style.display = 'none';
+    allGears.forEach(g => {
+      const el = document.getElementById('gear-' + g);
+      if (el) el.style.opacity = '1';
+    });
+    return;
+  }
+
+  gearActive = name;
+  const d = gearData[name];
+
+  allGears.forEach(g => {
+    const el = document.getElementById('gear-' + g);
+    if (el) el.style.opacity = g === name ? '1' : '0.35';
+  });
+
+  panel.style.display = 'block';
+  panel.style.background = d.bg;
+  panel.style.border = '1px solid ' + d.border;
+  panel.innerHTML = `
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:${d.color};margin-bottom:12px;">${d.label}</div>
+    <p style="color:#d4d4d8;font-size:15px;line-height:1.7;margin-bottom:16px;">${d.description}</p>
+    <div style="background:#00000033;border-radius:10px;padding:14px 16px;margin-bottom:12px;">
+      <p style="color:#f87171;font-size:14px;line-height:1.6;">⚠️ ${d.without}</p>
+    </div>
+    <div style="background:#00000033;border-radius:10px;padding:14px 16px;">
+      <p style="color:#a1a1aa;font-size:14px;line-height:1.6;">💡 ${d.example}</p>
+    </div>
+  `;
+}
+function cpToggleTable() {
+  const table = document.getElementById('cp-table');
+  const btn = document.getElementById('cp-table-btn');
+  if (!table || !btn) return;
+
+  if (table.style.display === 'none') {
+    const tbody = document.getElementById('cp-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    let balance = 925000;
+    const withdrawal = 75600;
+    const rate = 0.06;
+
+    cpData.forEach((d, i) => {
+      if (i === 0) return;
+      const startBal = cpData[i-1].funds === 0 ? 0 : balance;
+      const returnAmt = Math.round(startBal * rate);
+      const endBal = Math.max(0, startBal + returnAmt - withdrawal);
+      balance = endBal;
+
+      const isDepleted = endBal === 0;
+      const row = document.createElement('tr');
+      row.style.borderBottom = '1px solid #1c1c1f';
+      row.innerHTML = `
+        <td style="padding:10px 12px;color:var(--muted);font-weight:700;">Age ${d.age}</td>
+        <td style="padding:10px 12px;text-align:right;color:#fff;">$${startBal.toLocaleString()}</td>
+        <td style="padding:10px 12px;text-align:right;color:#4ade80;">+$${returnAmt.toLocaleString()}</td>
+        <td style="padding:10px 12px;text-align:right;color:#f87171;">-$${withdrawal.toLocaleString()}</td>
+        <td style="padding:10px 12px;text-align:right;color:${isDepleted ? '#3f3f46' : '#fff'};">
+          ${isDepleted ? 'Depleted' : '$' + endBal.toLocaleString()}
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    const startRow = document.createElement('tr');
+    startRow.style.borderBottom = '1px solid var(--border)';
+    startRow.innerHTML = `
+      <td style="padding:10px 12px;color:var(--muted);font-weight:700;">Age 67</td>
+      <td style="padding:10px 12px;text-align:right;color:#fff;">$925,000</td>
+      <td style="padding:10px 12px;text-align:right;color:var(--muted);">—</td>
+      <td style="padding:10px 12px;text-align:right;color:var(--muted);">—</td>
+      <td style="padding:10px 12px;text-align:right;color:#fff;">$925,000</td>
+    `;
+    tbody.insertBefore(startRow, tbody.firstChild);
+
+    const footnote = document.getElementById('cp-footnote');
+    if (footnote) footnote.style.display = 'block';
+    table.style.display = 'block';
+    btn.textContent = '🔼 Hide The Numbers';
+  } else {
+    const footnote = document.getElementById('cp-footnote');
+    if (footnote) footnote.style.display = 'none';
+    table.style.display = 'none';
+    btn.textContent = '🔍 Show Me The Numbers';
+  }
+}
+function cpAnimate() {
+  const yearLabel = document.getElementById('cp-year-label');
+  cpBuildChart();
+  let i = 0;
+  function step() {
+    if (i >= cpData.length) {
+      if (yearLabel) yearLabel.textContent = 'Age 81: Funds Depleted';
+      return;
+    }
+    const d = cpData[i];
+    const bar = document.getElementById('cp-bar-' + i);
+    if (bar) {
+      const pct = d.funds / cpMax;
+      bar.style.height = (d.funds === 0 ? 4 : Math.max(8, Math.round(pct * 150))) + 'px';
+      bar.style.opacity = '1';
+    }
+    if (yearLabel) yearLabel.textContent = d.funds > 0 ? 'Age ' + d.age + ': ' + cpFmt(d.funds) : 'Age ' + d.age + ': $0 - Depleted';
+    i++;
+    setTimeout(step, 400);
+  }
+  step();
+}
+
+
+render();
+
+</script>
+</body>
+</html>
